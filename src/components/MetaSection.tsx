@@ -36,12 +36,12 @@ export default function MetaSection({
             Venue
             </label>
             <input
-            type="text"
-            className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner placeholder:text-stone-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
-            placeholder="e.g. Big Bun Burgers"
-            value={venue}
-            onChange={(e) => onVenueChange(e.target.value)}
-        />
+                type="text"
+                className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner placeholder:text-stone-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                placeholder="e.g. Big Bun Burgers"
+                value={venue}
+                onChange={(e) => onVenueChange(e.target.value)}
+            />
         </div>
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wide text-stone-700">
@@ -104,15 +104,14 @@ export default function MetaSection({
           </label>
         </div>
 
-        <button
-          type="button"
-          onClick={onSave}
-          className="mt-3 inline-flex items-center justify-center rounded-full bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-amber-700 active:bg-amber-800"
-        >
-          🍔 Save this lunch
-        </button>
+            <button
+            type="button"
+            onClick={onSave}
+            className="mt-3 inline-flex items-center justify-center rounded-full bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-amber-700 active:bg-amber-800"
+            >
+            🍔 Save this lunch
+            </button>
         </div>
-      </div>
     </section>
   );
 }
