@@ -29,66 +29,79 @@ export default function MetaSection({
   onSave,
 }: MetaSectionProps) {
   return (
-    <section className="grid gap-4 rounded-xl bg-white p-4 shadow-sm md:grid-cols-3">
-      <div className="md:col-span-2 space-y-3">
+    {/* Meta + score overview */}
+    <section className="space-y-3 rounded-2xl border border-amber-200 bg-amber-100/70 p-4 shadow-sm">
+        <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-slate-700">
-            Venue name
-          </label>
-          <input
+            <label className="block text-xs font-semibold uppercase tracking-wide text-stone-700">
+            Venue
+            </label>
+            <input
             type="text"
-            className="mt-1 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="e.g. The Hypothetical Bistro"
+            className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner placeholder:text-stone-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+            placeholder="e.g. Big Bun Burgers"
             value={venue}
             onChange={(e) => onVenueChange(e.target.value)}
-          />
+        />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-xs font-semibold uppercase tracking-wide text-stone-700">
             Date
           </label>
           <input
             type="date"
-            className="mt-1 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="flex flex-col justify-between rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Current score
-          </div>
-          <div className="mt-1 text-2xl font-bold">
-            {finalTotal}{" "}
-            <span className="text-sm font-normal text-slate-500">
-              / {maxBaseTotal}
-            </span>
-          </div>
-          <div className="mt-1 text-xs text-slate-500">
-            Base: {baseTotal} (15 × 0–10) + bonuses
-          </div>
-        </div>
-        <div className="mt-3 space-y-1">
-          <label className="flex items-center gap-2 text-xs text-slate-700">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
-              checked={serverRememberedName}
-              onChange={(e) => onToggleServerRememberedName(e.target.checked)}
-            />
-            Server remembered our name (+5)
-          </label>
-          <label className="flex items-center gap-2 text-xs text-slate-700">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
-              checked={someoneOrderedSalad}
-              onChange={(e) => onToggleSomeoneOrderedSalad(e.target.checked)}
-            />
-            Someone ordered salad “just to be good” (−3)
+      <div className="mt-2 rounded-xl bg-stone-900 px-4 py-3 text-stone-50">
+        <div className="flex items-baseline justify-between">
+            <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-amber-200">
+                    Current score
+                </p>
+                <p className="mt-1 text-2xl font-extrabold">
+                    {finalTotal}
+                    <span className="text-sm font-normal text-amber-200">
+                    {" "}
+                    / {maxBaseTotal}
+                    </span>
+                </p>
+                </div>
+                <div className="rounded-full bg-emerald-500/20 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-emerald-100">
+                {finalTotal >= maxBaseTotal * 0.75
+                    ? "Hall of Fame"
+                    : finalTotal >= maxBaseTotal * 0.5
+                    ? "Solid Lunch"
+                    : finalTotal >= maxBaseTotal * 0.25
+                    ? "Never Again"
+                    : "Burn The Place Down"}
+                </div>
+            </div>
+            <p className="mt-1 text-[0.7rem] text-amber-100/80">
+                Base: {baseTotal} (15 × 0–10) + secret burger bonuses.
+            </p>
+            <div className="mt-3 space-y-1.5 text-xs">
+              <label className="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-stone-500 bg-stone-800 text-emerald-400 focus:ring-emerald-400"
+                    checked={serverRememberedName}
+                    onChange={(e) => onToggleServerRememberedName(e.target.checked)}
+                />
+                <span>Server remembered our name (+5)</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-stone-500 bg-stone-800 text-red-400 focus:ring-red-400"
+                  checked={someoneOrderedSalad}
+                  onChange={(e) => onToggleSomeoneOrderedSalad(e.target.checked)}
+                />
+            <span>Someone ordered salad “just to be good” (−3)</span>
           </label>
         </div>
 
@@ -99,6 +112,7 @@ export default function MetaSection({
         >
           🍔 Save this lunch
         </button>
+        </div>
       </div>
     </section>
   );

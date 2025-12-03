@@ -77,20 +77,30 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-5xl px-4 py-4">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            🍔 Team Lunch Score App
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Because no meal is complete without dubious data and questionable
+    <div className="min-h-screen bg-amber-50 text-stone-900">
+      {/* Toasty bun header */}
+      <header className="sticky top-0 z-10 border-b border-amber-200 bg-amber-100/95 backdrop-blur">
+        <div className="mx-auto max-w-xl px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-300 shadow-inner">
+              <span className="text-xl" aria-hidden="true">
+                🍔
+              </span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold tracking-tight">
+                Team Lunch Score App
+              </h1>
+              <p className="text-xs text-stone-700">
+                Because no meal is complete without dubious data and questionable
             metrics.
-          </p>
+              </p>
+            </div>
+          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6 space-y-6">
+      <main className="mx-auto flex max-w-xl flex-col gap-5 px-4 py-5 pb-24">
         <MetaSection
           venue={venue}
           date={date}
