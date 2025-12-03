@@ -29,7 +29,6 @@ export default function MetaSection({
   onSave,
 }: MetaSectionProps) {
   return (
-    {/* Meta + score overview */}
     <section className="space-y-3 rounded-2xl border border-amber-200 bg-amber-100/70 p-4 shadow-sm">
         <div className="space-y-3">
         <div>

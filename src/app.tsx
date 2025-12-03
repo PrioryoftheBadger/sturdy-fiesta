@@ -101,6 +101,7 @@ function App() {
       </header>
 
       <main className="mx-auto flex max-w-xl flex-col gap-5 px-4 py-5 pb-24">
+        {/* Meta + score overview */}
         <MetaSection
           venue={venue}
           date={date}
