@@ -1,12 +1,15 @@
 // src/storage/localStorageBackend.ts
-import type { StorageBackend } from "./StorageProvider";
+import type {
+  StorageBackend,
+  LunchRecord,
+  ListResult,
+} from "./StorageTypes";
 
 const isBrowser =
   typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
 /**
- * Small helper to safely access localStorage without blowing up in
- * non-browser or restricted environments.
+ * Safely access localStorage (avoids SSR / restricted-frame crashes).
  */
 function safeLocalStorage() {
   if (!isBrowser) return null;
@@ -17,50 +20,85 @@ function safeLocalStorage() {
   }
 }
 
+/**
+ * A clean, spec-aligned LocalStorage backend.
+ * Stores:
+ *   team-lunch:record:<id> = JSON.stringify(LunchRecord)
+ */
 export function createLocalStorageBackend(
   options?: { prefix?: string }
 ): StorageBackend {
   const prefix = options?.prefix ?? "team-lunch:";
+  const recordPrefix = `${prefix}record:`; // e.g. team-lunch:record:abc123
 
-  const makeKey = (key: string) => `${prefix}${key}`;
+  const makeRecordKey = (id: string) => `${recordPrefix}${id}`;
 
   return {
-    async getItem(key: string): Promise<string | null> {
+    // -------------------------------------------------------------
+    // SAVE
+    // -------------------------------------------------------------
+    async save(record: LunchRecord): Promise<void> {
+      const ls = safeLocalStorage();
+      if (!ls) return;
+
+      const key = makeRecordKey(record.id);
+      const json = JSON.stringify(record);
+      ls.setItem(key, json);
+    },
+
+    // -------------------------------------------------------------
+    // LOAD
+    // -------------------------------------------------------------
+    async load(id: string): Promise<LunchRecord | null> {
       const ls = safeLocalStorage();
       if (!ls) return null;
-      return ls.getItem(makeKey(key));
+
+      const raw = ls.getItem(makeRecordKey(id));
+      if (!raw) return null;
+
+      try {
+        return JSON.parse(raw) as LunchRecord;
+      } catch {
+        return null;
+      }
     },
 
-    async setItem(key: string, value: string): Promise<void> {
+    // -------------------------------------------------------------
+    // LIST
+    // -------------------------------------------------------------
+    async listRecords(): Promise<ListResult<LunchRecord>> {
       const ls = safeLocalStorage();
-      if (!ls) return;
-      ls.setItem(makeKey(key), value);
-    },
+      if (!ls) return { items: [] };
 
-    async removeItem(key: string): Promise<void> {
-      const ls = safeLocalStorage();
-      if (!ls) return;
-      ls.removeItem(makeKey(key));
-    },
-
-    async listKeys(prefixFilter?: string): Promise<string[]> {
-      const ls = safeLocalStorage();
-      if (!ls) return [];
-      const keys: string[] = [];
-      const fullPrefix = prefixFilter
-        ? makeKey(prefixFilter)
-        : prefix;
+      const items: LunchRecord[] = [];
 
       for (let i = 0; i < ls.length; i++) {
-        const rawKey = ls.key(i);
-        if (!rawKey) continue;
-        if (rawKey.startsWith(fullPrefix)) {
-          keys.push(rawKey);
+        const key = ls.key(i);
+        if (!key) continue;
+        if (!key.startsWith(recordPrefix)) continue;
+
+        const raw = ls.getItem(key);
+        if (!raw) continue;
+
+        try {
+          const parsed = JSON.parse(raw) as LunchRecord;
+          items.push(parsed);
+        } catch {
+          // ignore corrupt items
         }
       }
 
-      // Strip the global prefix back off
-      return keys.map((k) => k.replace(prefix, ""));
+      return { items };
+    },
+
+    // -------------------------------------------------------------
+    // REMOVE
+    // -------------------------------------------------------------
+    async remove(id: string): Promise<void> {
+      const ls = safeLocalStorage();
+      if (!ls) return;
+
+      ls.removeItem(makeRecordKey(id));
     },
   };
 }

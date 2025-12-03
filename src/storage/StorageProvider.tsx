@@ -5,17 +5,7 @@ import {
   useContext,
   useMemo,
 } from "react";
-
-export interface StorageBackend {
-  /** Get a raw string value for a key (or null if missing). */
-  getItem(key: string): Promise<string | null>;
-  /** Set a raw string value for a key. */
-  setItem(key: string, value: string): Promise<void>;
-  /** Remove a key entirely. */
-  removeItem(key: string): Promise<void>;
-  /** Optional: list keys under a given prefix. */
-  listKeys?(prefix?: string): Promise<string[]>;
-}
+import type { StorageBackend } from "./StorageTypes";
 
 /**
  * React context so the rest of the app doesn't care *how* we store,
