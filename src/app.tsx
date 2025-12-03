@@ -117,6 +117,7 @@ function App() {
           onSave={handleSave}
         />
 
+        {/* Categories */}
         <CategoryList scores={scores} onScoreChange={handleScoreChange} />
 
         <BonusSection

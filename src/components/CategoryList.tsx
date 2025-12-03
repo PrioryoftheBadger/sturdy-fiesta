@@ -12,34 +12,51 @@ export default function CategoryList({
   onScoreChange,
 }: CategoryListProps) {
   return (
-    <section className="space-y-3">
-      <h2 className="text-xl font-semibold">Scoring categories</h2>
-      <p className="text-sm text-slate-600">
-        Rate each category from <strong>0–10</strong>. Zero = “let’s never speak
-        of this again”, ten = “legendary team lore”.
-      </p>
+    <section className="space-y-2">
+                <div>
+            <h2 className="text-base font-semibold text-stone-900">
+              Rate the experience
+            </h2>
+            <p className="mt-0.5 text-xs text-stone-700">
+              Score each from{" "}
+              <span className="font-semibold text-emerald-700">0–10</span>.{" "}
+              <span className="text-[0.7rem]">
+                0 = “never again”, 10 = “lunch of legend”.
+              </span>
+            </p>
+          </div>
 
-      <div className="mt-3 grid gap-4 md:grid-cols-2">
+      <div className="mt-2 space-y-3">
         {CATEGORIES.map((cat) => (
           <div
             key={cat.id}
-            className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+            className="rounded-2xl border border-amber-200 bg-amber-50 p-3 shadow-sm"
           >
-            <div>
-              <div className="flex items-baseline justify-between gap-2">
-                <h3 className="text-sm font-semibold">{cat.name}</h3>
-                <div className="flex items-baseline gap-1 text-sm">
-                  <input
-                    type="number"
-                    min={0}
-                    max={10}
-                    step={1}
-                    value={scores[cat.id] ?? ""}
-                    onChange={(e) => onScoreChange(cat.id, e.target.value)}
-                    className="w-16 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-right text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                  />
-                  <span className="text-xs text-slate-500">/ 10</span>
-                </div>
+                            <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold text-stone-900">
+                      {cat.name}
+                    </h3>
+                    <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
+                      {cat.description}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <label className="text-[0.65rem] font-semibold uppercase tracking-wide text-stone-600">
+                      Score
+                    </label>
+                    <div className="mt-1 flex items-center gap-1 text-sm">
+                      <input
+                        type="number"
+                        min={0}
+                        max={10}
+                        step={1}
+                        value={scores[cat.id] ?? ""}
+                        onChange={(e) => onScoreChange(cat.id, e.target.value)}
+                        className="w-14 rounded-lg border border-amber-300 bg-white px-2 py-1 text-right text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                      />
+                      <span className="text-[0.7rem] text-stone-500">/ 10</span>
+                    </div>
               </div>
               <p className="mt-1 text-xs text-slate-600">
                 {cat.description}
