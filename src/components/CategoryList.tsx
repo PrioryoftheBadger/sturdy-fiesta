@@ -28,41 +28,38 @@ export default function CategoryList({
 
       <div className="mt-2 space-y-3">
         {CATEGORIES.map((cat) => (
-          <div
+            <div
             key={cat.id}
             className="rounded-2xl border border-amber-200 bg-amber-50 p-3 shadow-sm"
-          >
-                            <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-stone-900">
-                      {cat.name}
-                    </h3>
-                    <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
-                      {cat.description}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <label className="text-[0.65rem] font-semibold uppercase tracking-wide text-stone-600">
-                      Score
-                    </label>
-                    <div className="mt-1 flex items-center gap-1 text-sm">
-                      <input
-                        type="number"
-                        min={0}
-                        max={10}
-                        step={1}
-                        value={scores[cat.id] ?? ""}
-                        onChange={(e) => onScoreChange(cat.id, e.target.value)}
-                        className="w-14 rounded-lg border border-amber-300 bg-white px-2 py-1 text-right text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
-                      />
-                      <span className="text-[0.7rem] text-stone-500">/ 10</span>
+            >
+                <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-stone-900">
+                            {cat.name}
+                        </h3>
+                        <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
+                            {cat.description}
+                        </p>
                     </div>
-              </div>
-              <p className="mt-1 text-xs text-slate-600">
-                {cat.description}
-              </p>
+                    <div className="flex flex-col items-end">
+                        <label className="text-[0.65rem] font-semibold uppercase tracking-wide text-stone-600">
+                            Score
+                        </label>
+                        <div className="mt-1 flex items-center gap-1 text-sm">
+                            <input
+                                type="number"
+                                min={0}
+                                max={10}
+                                step={1}
+                                value={scores[cat.id] ?? ""}
+                                onChange={(e) => onScoreChange(cat.id, e.target.value)}
+                                className="w-14 rounded-lg border border-amber-300 bg-white px-2 py-1 text-right text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                            />
+                            <span className="text-[0.7rem] text-stone-500">/ 10</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         ))}
       </div>
     </section>
