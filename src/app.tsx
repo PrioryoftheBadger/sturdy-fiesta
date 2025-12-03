@@ -116,7 +116,8 @@ function App() {
   const baseTotal = useMemo(
     () =>
       CATEGORIES.reduce(
-        (sum, cat) => sum + (Number.isFinite(scores[cat.id]) ? scores[cat.id] : 0),
+        (sum, cat) =>
+          sum + (Number.isFinite(scores[cat.id]) ? scores[cat.id] : 0),
         0
       ),
     [scores]
@@ -128,7 +129,6 @@ function App() {
     let total = baseTotal;
     if (serverRememberedName) total += 5;
     if (someoneOrderedSalad) total -= 3;
-    // keep things sensible
     if (total < 0) total = 0;
     return total;
   }, [baseTotal, serverRememberedName, someoneOrderedSalad]);
@@ -139,103 +139,141 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-5xl px-4 py-6">
-          <h1 className="text-3xl font-bold tracking-tight">
-            🥪 Team Lunch Score App
-          </h1>
-          <p className="mt-1 text-slate-600">
-            Because no meal is complete without dubious data and questionable metrics.
-          </p>
+    <div className="min-h-screen bg-amber-50 text-stone-900">
+      {/* Toasty bun header */}
+      <header className="sticky top-0 z-10 border-b border-amber-200 bg-amber-100/95 backdrop-blur">
+        <div className="mx-auto max-w-xl px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-300 shadow-inner">
+              <span className="text-xl" aria-hidden="true">
+                🍔
+              </span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold tracking-tight">
+                Team Lunch Score App
+              </h1>
+              <p className="text-xs text-stone-700">
+                Log the vibes, rate the burgers, crown the legends.
+              </p>
+            </div>
+          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6 space-y-6">
-        {/* Meta info */}
-        <section className="grid gap-4 rounded-xl bg-white p-4 shadow-sm md:grid-cols-3">
-          <div className="md:col-span-2 space-y-3">
+      <main className="mx-auto flex max-w-xl flex-col gap-5 px-4 py-5 pb-24">
+        {/* Meta + score overview */}
+        <section className="space-y-3 rounded-2xl border border-amber-200 bg-amber-100/70 p-4 shadow-sm">
+          <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Venue name
+              <label className="block text-xs font-semibold uppercase tracking-wide text-stone-700">
+                Venue
               </label>
               <input
                 type="text"
-                className="mt-1 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                placeholder="e.g. The Hypothetical Bistro"
+                className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner placeholder:text-stone-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                placeholder="e.g. Big Bun Burgers"
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">
+              <label className="block text-xs font-semibold uppercase tracking-wide text-stone-700">
                 Date
               </label>
               <input
                 type="date"
-                className="mt-1 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="flex flex-col justify-between rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Current score
+          <div className="mt-2 rounded-xl bg-stone-900 px-4 py-3 text-stone-50">
+            <div className="flex items-baseline justify-between">
+              <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-amber-200">
+                  Current score
+                </p>
+                <p className="mt-1 text-2xl font-extrabold">
+                  {finalTotal}
+                  <span className="text-sm font-normal text-amber-200">
+                    {" "}
+                    / {maxBaseTotal}
+                  </span>
+                </p>
               </div>
-              <div className="mt-1 text-2xl font-bold">
-                {finalTotal}{" "}
-                <span className="text-sm font-normal text-slate-500">
-                  / {maxBaseTotal}
-                </span>
-              </div>
-              <div className="mt-1 text-xs text-slate-500">
-                Base: {baseTotal} (15 × 0–10) + bonuses
+              <div className="rounded-full bg-emerald-500/20 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-emerald-100">
+                {finalTotal >= maxBaseTotal * 0.75
+                  ? "Hall of Fame"
+                  : finalTotal >= maxBaseTotal * 0.5
+                  ? "Solid Feed"
+                  : "Try Again Next Time"}
               </div>
             </div>
-            <div className="mt-3 space-y-1">
-              <label className="flex items-center gap-2 text-xs text-slate-700">
+            <p className="mt-1 text-[0.7rem] text-amber-100/80">
+              Base: {baseTotal} (15 × 0–10) + secret burger bonuses.
+            </p>
+
+            <div className="mt-3 space-y-1.5 text-xs">
+              <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="h-4 w-4 rounded border-stone-500 bg-stone-800 text-emerald-400 focus:ring-emerald-400"
                   checked={serverRememberedName}
                   onChange={(e) => setServerRememberedName(e.target.checked)}
                 />
-                Server remembered our name (+5)
+                <span>Server remembered our name (+5)</span>
               </label>
-              <label className="flex items-center gap-2 text-xs text-slate-700">
+              <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="h-4 w-4 rounded border-stone-500 bg-stone-800 text-red-400 focus:ring-red-400"
                   checked={someoneOrderedSalad}
                   onChange={(e) => setSomeoneOrderedSalad(e.target.checked)}
                 />
-                Someone ordered salad “just to be good” (−3)
+                <span>Someone ordered salad “just to be good” (−3)</span>
               </label>
             </div>
           </div>
         </section>
 
-        {/* Category scores */}
-        <section className="space-y-3">
-          <h2 className="text-xl font-semibold">Scoring categories</h2>
-          <p className="text-sm text-slate-600">
-            Rate each category from <strong>0–10</strong>. Zero = “let’s never
-            speak of this again”, ten = “legendary team lore”.
-          </p>
+        {/* Categories */}
+        <section className="space-y-2">
+          <div>
+            <h2 className="text-base font-semibold text-stone-900">
+              Rate the experience
+            </h2>
+            <p className="mt-0.5 text-xs text-stone-700">
+              Score each from{" "}
+              <span className="font-semibold text-emerald-700">0–10</span>.{" "}
+              <span className="text-[0.7rem]">
+                0 = “never again”, 10 = “lunch of legend”.
+              </span>
+            </p>
+          </div>
 
-          <div className="mt-3 grid gap-4 md:grid-cols-2">
+          <div className="mt-2 space-y-3">
             {CATEGORIES.map((cat) => (
               <div
                 key={cat.id}
-                className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+                className="rounded-2xl border border-amber-200 bg-amber-50 p-3 shadow-sm"
               >
-                <div>
-                  <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="text-sm font-semibold">{cat.name}</h3>
-                    <div className="flex items-baseline gap-1 text-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold text-stone-900">
+                      {cat.name}
+                    </h3>
+                    <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
+                      {cat.description}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <label className="text-[0.65rem] font-semibold uppercase tracking-wide text-stone-600">
+                      Score
+                    </label>
+                    <div className="mt-1 flex items-center gap-1 text-sm">
                       <input
                         type="number"
                         min={0}
@@ -245,14 +283,11 @@ function App() {
                         onChange={(e) =>
                           handleScoreChange(cat.id, e.target.value)
                         }
-                        className="w-16 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-right text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        className="w-14 rounded-lg border border-amber-300 bg-white px-2 py-1 text-right text-sm shadow-inner focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
                       />
-                      <span className="text-xs text-slate-500">/ 10</span>
+                      <span className="text-[0.7rem] text-stone-500">/10</span>
                     </div>
                   </div>
-                  <p className="mt-1 text-xs text-slate-600">
-                    {cat.description}
-                  </p>
                 </div>
               </div>
             ))}
@@ -260,49 +295,54 @@ function App() {
         </section>
 
         {/* Bonus rounds */}
-        <section className="space-y-3 rounded-xl bg-white p-4 shadow-sm">
-          <h2 className="text-xl font-semibold">Bonus rounds</h2>
-          <p className="text-sm text-slate-600">
-            Completely non-scientific but essential for the official record.
+        <section className="space-y-3 rounded-2xl border border-stone-200 bg-stone-900/95 p-4 text-stone-50 shadow-sm">
+          <h2 className="text-base font-semibold flex items-center gap-2">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-500/80 text-xs">
+              🔥
+            </span>
+            Bonus rounds
+          </h2>
+          <p className="text-xs text-amber-100">
+            The important qualitative data: quotes, chaos and future cravings.
           </p>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Best Quote of the Lunch
+              <label className="block text-xs font-semibold uppercase tracking-wide text-amber-200">
+                Best quote of the lunch
               </label>
               <textarea
-                className="mt-1 h-20 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 h-20 w-full rounded-lg border border-stone-700 bg-stone-900 px-3 py-2 text-sm shadow-inner placeholder:text-stone-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300/60"
                 value={bestQuote}
                 onChange={(e) => setBestQuote(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Most Regrettable Order
+              <label className="block text-xs font-semibold uppercase tracking-wide text-amber-200">
+                Most regrettable order
               </label>
               <textarea
-                className="mt-1 h-20 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 h-20 w-full rounded-lg border border-stone-700 bg-stone-900 px-3 py-2 text-sm shadow-inner placeholder:text-stone-500 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-300/60"
                 value={mostRegrettableOrder}
                 onChange={(e) => setMostRegrettableOrder(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Conspiracy Theory of the Week
+              <label className="block text-xs font-semibold uppercase tracking-wide text-amber-200">
+                Conspiracy theory of the week
               </label>
               <textarea
-                className="mt-1 h-20 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 h-20 w-full rounded-lg border border-stone-700 bg-stone-900 px-3 py-2 text-sm shadow-inner placeholder:text-stone-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300/60"
                 value={conspiracy}
                 onChange={(e) => setConspiracy(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Future Venue Nomination
+              <label className="block text-xs font-semibold uppercase tracking-wide text-amber-200">
+                Future venue nomination
               </label>
               <textarea
-                className="mt-1 h-20 w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 h-20 w-full rounded-lg border border-stone-700 bg-stone-900 px-3 py-2 text-sm shadow-inner placeholder:text-stone-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300/60"
                 value={futureVenue}
                 onChange={(e) => setFutureVenue(e.target.value)}
               />
@@ -310,13 +350,19 @@ function App() {
           </div>
         </section>
 
-        {/* Summary / export stub */}
-        <section className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
-          <h2 className="text-base font-semibold">Summary (coming soon)</h2>
+        {/* Summary / stub */}
+        <section className="mb-4 rounded-2xl border border-dashed border-amber-300 bg-amber-50/70 p-4 text-xs text-stone-800">
+          <h2 className="text-sm font-semibold">Summary (coming soon)</h2>
           <p className="mt-1">
-            Next iteration: export this lunch as JSON/CSV, save to{" "}
-            <code>localStorage</code>, or build a “Hall of Fame / Shame”
-            leaderboard.
+            Next up: save this lunch to{" "}
+            <code className="rounded bg-stone-900/90 px-1 py-0.5 text-[0.7rem] text-amber-100">
+              localStorage
+            </code>{" "}
+            and build a{" "}
+            <span className="font-semibold text-emerald-700">
+              Hall of Fame / Shame
+            </span>{" "}
+            for all future burger adventures.
           </p>
         </section>
       </main>
