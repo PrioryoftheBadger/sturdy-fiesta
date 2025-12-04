@@ -1,6 +1,7 @@
 // src/components/CategoryList.tsx
 import { CATEGORIES } from "../categories";
 import type { ScoresState } from "../types";
+import WeatherWidget from "./components/WeatherWidget";
 
 type CategoryListProps = {
   scores: ScoresState;
@@ -37,6 +38,22 @@ export default function CategoryList({
                         <h3 className="text-sm font-semibold text-stone-900">
                             {cat.name}
                         </h3>
+                        {cat.id === "weatherManagement" && (
+                        <WeatherWidget
+                            dateTime={
+                            date
+                                ? new Date(`${date}T12:00:00`)
+                                : (() => {
+                                    const now = new Date();
+                                    now.setHours(12, 0, 0, 0);  // force lunch-time weather
+                                    return now;
+                                })()
+                            }
+                            latitude={-41.2865}
+                            longitude={174.7762}
+                        />
+                        )}
+                    
                         <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
                             {cat.description}
                         </p>
