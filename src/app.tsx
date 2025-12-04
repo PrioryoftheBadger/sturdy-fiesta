@@ -1,9 +1,10 @@
 // src/App.tsx
 import { useMemo, useState } from "react";
-import { CATEGORIES, MAX_BASE_TOTAL } from "./categories";
+import { MAX_BASE_TOTAL } from "./categories";
 import type { ScoresState } from "./types";
 import type { LunchRecord } from "./storage/StorageTypes";
 import { useStorage } from "./storage/StorageProvider";
+import { computeFinalScore } from "./utils/scoring";
 
 import MetaSection from "./components/MetaSection";
 import CategoryList from "./components/CategoryList";
@@ -25,23 +26,14 @@ function App() {
 
   const storage = useStorage();
 
-  const baseTotal = useMemo(
+  const { baseTotal, finalTotal } = useMemo(
     () =>
-      CATEGORIES.reduce(
-        (sum, cat) =>
-          sum + (Number.isFinite(scores[cat.id]) ? scores[cat.id] : 0),
-        0
-      ),
-    [scores]
+      computeFinalScore(scores, {
+        serverRememberedName,
+        someoneOrderedSalad,
+      }),
+    [scores, serverRememberedName, someoneOrderedSalad]
   );
-
-  const finalTotal = useMemo(() => {
-    let total = baseTotal;
-    if (serverRememberedName) total += 5;
-    if (someoneOrderedSalad) total -= 3;
-    if (total < 0) total = 0;
-    return total;
-  }, [baseTotal, serverRememberedName, someoneOrderedSalad]);
 
   const handleScoreChange = (id: string, value: string) => {
     const numeric = Math.max(0, Math.min(10, Number(value) || 0));
