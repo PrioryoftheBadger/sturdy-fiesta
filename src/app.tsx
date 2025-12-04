@@ -164,14 +164,6 @@ function App() {
                     🍔 Save this lunch
                   </button>
                 </div>
-
-                <section className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
-                  <h2 className="text-base font-semibold">Summary (coming soon)</h2>
-                  <p className="mt-1">
-                    Next iteration: list all saved lunches from your configured
-                    storage backend and build a Hall of Fame / Shame leaderboard.
-                  </p>
-                </section>
               </div>
             ) : (
               <SavedLunchesTab />
