@@ -117,7 +117,7 @@ function App() {
               }`}
               onClick={() => setActiveTab("saved")}
             >
-              Saved lunches
+              Hall of Fame
             </button>
           </div>
 
