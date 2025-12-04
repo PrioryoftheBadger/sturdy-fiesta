@@ -155,6 +155,16 @@ function App() {
                   onFutureVenueChange={setFutureVenue}
                 />
 
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    className="inline-flex items-center justify-center rounded-full bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-amber-700 active:bg-amber-800"
+                  >
+                    🍔 Save this lunch
+                  </button>
+                </div>
+
                 <section className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
                   <h2 className="text-base font-semibold">Summary (coming soon)</h2>
                   <p className="mt-1">
