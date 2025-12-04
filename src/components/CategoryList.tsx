@@ -1,7 +1,7 @@
 // src/components/CategoryList.tsx
 import { CATEGORIES } from "../categories";
 import type { ScoresState } from "../types";
-import WeatherWidget from "./components/WeatherWidget";
+import WeatherWidget from "./WeatherWidget";
 
 type CategoryListProps = {
   scores: ScoresState;
