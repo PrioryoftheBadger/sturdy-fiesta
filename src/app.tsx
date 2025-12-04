@@ -120,6 +120,7 @@ function App() {
         {/* Categories */}
         <CategoryList scores={scores} onScoreChange={handleScoreChange} />
 
+        {/* Bonus rounds */}
         <BonusSection
           bestQuote={bestQuote}
           mostRegrettableOrder={mostRegrettableOrder}
