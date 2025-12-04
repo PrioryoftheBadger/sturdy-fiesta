@@ -38,7 +38,7 @@ export default function CategoryList({
                         <h3 className="text-sm font-semibold text-stone-900">
                             {cat.name}
                         </h3>
-                        {cat.id === "weatherManagement" && (
+                        {/* {cat.id === "weatherManagement" && (
                         <WeatherWidget
                             dateTime={
                             date
@@ -52,7 +52,7 @@ export default function CategoryList({
                             latitude={-41.2865}
                             longitude={174.7762}
                         />
-                        )}
+                        )} */}
                     
                         <p className="mt-1 text-[0.75rem] leading-snug text-stone-700">
                             {cat.description}
