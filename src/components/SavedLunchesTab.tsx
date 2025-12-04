@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { CATEGORIES, MAX_BASE_TOTAL } from "../categories";
+import { MAX_BASE_TOTAL } from "../categories";
 import type { LunchRecord } from "../storage/StorageTypes";
 import { useStorage } from "../storage/StorageProvider";
+import { computeFinalScore } from "../utils/scoring";
 
 function TabHeader({ onRefresh, refreshing }: { onRefresh: () => void; refreshing: boolean }) {
   return (
@@ -29,22 +30,10 @@ function LunchItem({
   record: LunchRecord;
   onDelete: (id: string) => void;
 }) {
-  const baseTotal = useMemo(
-    () =>
-      CATEGORIES.reduce(
-        (sum, cat) => sum + (Number.isFinite(record.scores[cat.id]) ? record.scores[cat.id] : 0),
-        0
-      ),
-    [record.scores]
+  const { baseTotal, finalTotal } = useMemo(
+    () => computeFinalScore(record.scores, record.bonuses),
+    [record.bonuses, record.scores]
   );
-
-  const finalTotal = useMemo(() => {
-    let total = baseTotal;
-    if (record.bonuses.serverRememberedName) total += 5;
-    if (record.bonuses.someoneOrderedSalad) total -= 3;
-    if (total < 0) total = 0;
-    return total;
-  }, [baseTotal, record.bonuses.serverRememberedName, record.bonuses.someoneOrderedSalad]);
 
   return (
     <article className="flex flex-col gap-3 rounded-xl border border-amber-100 bg-white/70 p-3 shadow-sm">
@@ -120,7 +109,14 @@ export default function SavedLunchesTab() {
     setError(null);
     try {
       const result = await storage.listRecords();
-      setRecords(result.items);
+      const sortedRecords = result.items
+        .map((item) => ({
+          item,
+          finalTotal: computeFinalScore(item.scores, item.bonuses).finalTotal,
+        }))
+        .sort((a, b) => b.finalTotal - a.finalTotal)
+        .map(({ item }) => item);
+      setRecords(sortedRecords);
     } catch (err) {
       console.error(err);
       setError("Could not load saved lunches. Check console for details.");
