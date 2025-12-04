@@ -8,8 +8,10 @@ import { useStorage } from "./storage/StorageProvider";
 import MetaSection from "./components/MetaSection";
 import CategoryList from "./components/CategoryList";
 import BonusSection from "./components/BonusSection";
+import SavedLunchesTab from "./components/SavedLunchesTab";
 
 function App() {
+  const [activeTab, setActiveTab] = useState<"score" | "saved">("score");
   const [venue, setVenue] = useState("");
   const [date, setDate] = useState("");
   const [scores, setScores] = useState<ScoresState>({});
@@ -101,43 +103,78 @@ function App() {
       </header>
 
       <main className="mx-auto flex max-w-xl flex-col gap-5 px-4 py-5 pb-24">
-        {/* Meta + score overview */}
-        <MetaSection
-          venue={venue}
-          date={date}
-          baseTotal={baseTotal}
-          maxBaseTotal={MAX_BASE_TOTAL}
-          finalTotal={finalTotal}
-          serverRememberedName={serverRememberedName}
-          someoneOrderedSalad={someoneOrderedSalad}
-          onVenueChange={setVenue}
-          onDateChange={setDate}
-          onToggleServerRememberedName={setServerRememberedName}
-          onToggleSomeoneOrderedSalad={setSomeoneOrderedSalad}
-          onSave={handleSave}
-        />
+        <section className="rounded-2xl border border-amber-200 bg-white/70 shadow-sm">
+          <div className="flex items-center gap-2 border-b border-amber-100 px-3 py-2 text-sm font-semibold text-stone-700">
+            <button
+              type="button"
+              className={`flex-1 rounded-xl px-3 py-2 transition ${
+                activeTab === "score"
+                  ? "bg-amber-200 text-stone-900 shadow-inner"
+                  : "hover:bg-amber-100"
+              }`}
+              onClick={() => setActiveTab("score")}
+            >
+              Score lunch
+            </button>
+            <button
+              type="button"
+              className={`flex-1 rounded-xl px-3 py-2 transition ${
+                activeTab === "saved"
+                  ? "bg-amber-200 text-stone-900 shadow-inner"
+                  : "hover:bg-amber-100"
+              }`}
+              onClick={() => setActiveTab("saved")}
+            >
+              Saved lunches
+            </button>
+          </div>
 
-        {/* Categories */}
-        <CategoryList scores={scores} onScoreChange={handleScoreChange} />
+          <div className="p-4">
+            {activeTab === "score" ? (
+              <div className="flex flex-col gap-5">
+                {/* Meta + score overview */}
+                <MetaSection
+                  venue={venue}
+                  date={date}
+                  baseTotal={baseTotal}
+                  maxBaseTotal={MAX_BASE_TOTAL}
+                  finalTotal={finalTotal}
+                  serverRememberedName={serverRememberedName}
+                  someoneOrderedSalad={someoneOrderedSalad}
+                  onVenueChange={setVenue}
+                  onDateChange={setDate}
+                  onToggleServerRememberedName={setServerRememberedName}
+                  onToggleSomeoneOrderedSalad={setSomeoneOrderedSalad}
+                  onSave={handleSave}
+                />
 
-        {/* Bonus rounds */}
-        <BonusSection
-          bestQuote={bestQuote}
-          mostRegrettableOrder={mostRegrettableOrder}
-          conspiracy={conspiracy}
-          futureVenue={futureVenue}
-          onBestQuoteChange={setBestQuote}
-          onMostRegrettableOrderChange={setMostRegrettableOrder}
-          onConspiracyChange={setConspiracy}
-          onFutureVenueChange={setFutureVenue}
-        />
+                {/* Categories */}
+                <CategoryList scores={scores} onScoreChange={handleScoreChange} />
 
-        <section className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
-          <h2 className="text-base font-semibold">Summary (coming soon)</h2>
-          <p className="mt-1">
-            Next iteration: list all saved lunches from your configured storage
-            backend and build a Hall of Fame / Shame leaderboard.
-          </p>
+                {/* Bonus rounds */}
+                <BonusSection
+                  bestQuote={bestQuote}
+                  mostRegrettableOrder={mostRegrettableOrder}
+                  conspiracy={conspiracy}
+                  futureVenue={futureVenue}
+                  onBestQuoteChange={setBestQuote}
+                  onMostRegrettableOrderChange={setMostRegrettableOrder}
+                  onConspiracyChange={setConspiracy}
+                  onFutureVenueChange={setFutureVenue}
+                />
+
+                <section className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
+                  <h2 className="text-base font-semibold">Summary (coming soon)</h2>
+                  <p className="mt-1">
+                    Next iteration: list all saved lunches from your configured
+                    storage backend and build a Hall of Fame / Shame leaderboard.
+                  </p>
+                </section>
+              </div>
+            ) : (
+              <SavedLunchesTab />
+            )}
+          </div>
         </section>
       </main>
     </div>
