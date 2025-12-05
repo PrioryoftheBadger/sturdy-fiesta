@@ -53,7 +53,7 @@ export function createFireproofBackend(options?: {
     },
 
     async listRecords(): Promise<ListResult<LunchRecord>> {
-      const queryResult = await db.query(byDateVenue);
+      const queryResult = await db.query(byDateVenue, { include_docs: true });
 
       const rows: unknown[] =
         // query() returns { rows } when using indexes
@@ -64,10 +64,30 @@ export function createFireproofBackend(options?: {
         (queryResult as any)?.docs ??
         [];
 
-      const items = rows
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((row: any) => (row?.doc ?? row?.value ?? row) as FireproofDoc)
-        .filter(Boolean)
+      const docs: (FireproofDoc | null)[] = await Promise.all(
+        rows.map(async (row: unknown) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const doc = (row as any)?.doc ?? (row as any)?.value ?? row;
+
+          if (doc && typeof doc === "object" && "_id" in doc) {
+            return doc as FireproofDoc;
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const id = (row as any)?.id;
+          if (!id) return null;
+
+          try {
+            return (await db.get(id)) as FireproofDoc;
+          } catch (err) {
+            console.warn("Fireproof listRecords failed to load doc", err);
+            return null;
+          }
+        })
+      );
+
+      const items = docs
+        .filter((doc): doc is FireproofDoc => Boolean(doc))
         .map(toRecord)
         .sort(sortByDateVenue);
 
